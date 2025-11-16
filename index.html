@@ -110,10 +110,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
-        /* [修正] .controls-container スタイル削除 */
-
         .eyedropper-section {
-            /* [修正] 元のスタイルに戻す */
             margin-bottom: 25px;
             text-align: center;
         }
@@ -122,15 +119,13 @@
             background: #667eea;
             color: white;
             border: none;
-            /* [修正] 元のスタイルに戻す */
             padding: 12px 25px;
             font-size: 15px;
             border-radius: 10px;
             cursor: pointer;
             transition: background 0.2s;
             font-weight: bold;
-            width: 100%; /* 100% に戻す */
-            /* white-space: nowrap; 削除 */
+            width: 100%;
         }
 
         .eyedropper-btn:hover {
@@ -152,7 +147,6 @@
             align-items: center;
             gap: 15px;
             position: relative; 
-            /* [修正] flex: 1 削除 */
         }
 
         .favorite-btn {
@@ -346,8 +340,6 @@
             .container {
                 padding: 15px;
             }
-
-            /* [修正] .controls-container 関連削除 */
             
             .color-display {
                 flex-direction: column;
@@ -389,14 +381,14 @@
             </div>
         </div>
 
-        <!-- [修正] スポイト機能を元の位置に戻す -->
+        <!-- スポイト機能 -->
         <div class="eyedropper-section">
             <button id="eyedropperBtn" class="eyedropper-btn">
                 スポイトで色を取得
             </button>
         </div>
 
-        <!-- [修正] controls-container から出す -->
+        <!-- 色の表示とコピー -->
         <div class="color-display">
             <button class="favorite-btn" id="favoriteBtn" title="お気に入りに追加">♡</button>
             <div class="color-preview" id="colorPreview"></div>
@@ -406,7 +398,7 @@
             </div>
         </div>
 
-        <!-- [修正] お気に入りと履歴のコンテナ -->
+        <!-- お気に入りと履歴のコンテナ -->
         <div class="storage-container">
             <!-- お気に入りセクション -->
             <div class="storage-section">
@@ -764,10 +756,23 @@
                 item.dataset.hex = hex;
                 item.title = hex;
 
+                // [修正] コピー履歴にも削除ボタンを追加
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.innerHTML = '&times;';
+                
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    copyHistory = copyHistory.filter(h => h !== hex);
+                    renderHistory(); // 履歴を再描画
+                    saveHistory(); // 変更を保存
+                });
+                
                 item.addEventListener('click', () => { 
                     setUIColorFromHex(hex);
                 });
 
+                item.appendChild(deleteBtn); // 削除ボタンをアイテムに追加
                 historyList.appendChild(item);
             });
         }
